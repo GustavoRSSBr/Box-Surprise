@@ -1,0 +1,38 @@
+-- FUNCTION: public.buscardetalhesdoproduto(integer)
+
+-- DROP FUNCTION IF EXISTS public.buscardetalhesdoproduto(integer);
+
+CREATE OR REPLACE FUNCTION public.buscardetalhesdoproduto(
+	produtoidparam integer)
+    RETURNS TABLE(id_produto integer, titulo character varying, descricao text, valor numeric, tipo_produto character varying, tamanho_caixa character varying, respostas_box text, tema character varying) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
+BEGIN
+    -- Comentando o bloco de exceção para depuração
+    -- IF NOT EXISTS (SELECT 1 FROM produto WHERE idProduto = produtoIdParam) THEN
+    --     RAISE EXCEPTION 'Produto não encontrado';
+    -- END IF;
+
+    -- Retorna as informações detalhadas do produto
+    RETURN QUERY
+    SELECT
+        pr.idProduto AS id_produto,
+        pr.titulo AS titulo,
+        pr.descricao AS descricao,
+        pr.valor AS valor,
+        pr.tipoProduto AS tipo_produto,
+        pr.tamanhoCaixa AS tamanho_caixa,
+        pr.respostasBox AS respostas_box,
+        pr.tema AS tema
+    FROM produto pr
+    WHERE pr.idProduto = produtoIdParam;
+
+END;
+$BODY$;
+
+ALTER FUNCTION public.buscardetalhesdoproduto(integer)
+    OWNER TO postgres;

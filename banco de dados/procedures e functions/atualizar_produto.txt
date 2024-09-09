@@ -1,0 +1,33 @@
+-- PROCEDURE: public.atualizar_produto(integer, character varying, text, numeric, character varying, character varying)
+
+-- DROP PROCEDURE IF EXISTS public.atualizar_produto(integer, character varying, text, numeric, character varying, character varying);
+
+CREATE OR REPLACE PROCEDURE public.atualizar_produto(
+	IN produto_id integer,
+	IN p_titulo character varying,
+	IN p_descricao text,
+	IN p_valor numeric,
+	IN p_tipo_produto character varying,
+	IN p_tamanho_caixa character varying)
+LANGUAGE 'plpgsql'
+AS $BODY$
+BEGIN
+    -- Verifica se o produto existe
+    IF NOT EXISTS (SELECT 1 FROM produto WHERE idProduto = produto_id) THEN
+        RAISE EXCEPTION 'Produto não encontrado.';
+    END IF;
+
+    -- Atualiza os dados do produto
+    UPDATE produto
+    SET 
+        titulo = p_titulo,
+        descricao = p_descricao,
+        valor = p_valor,
+        tipoProduto = p_tipo_produto,
+        tamanhoCaixa = p_tamanho_caixa
+    WHERE idProduto = produto_id;
+
+END;
+$BODY$;
+ALTER PROCEDURE public.atualizar_produto(integer, character varying, text, numeric, character varying, character varying)
+    OWNER TO postgres;

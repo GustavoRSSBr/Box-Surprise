@@ -1,0 +1,26 @@
+-- PROCEDURE: public.salvar_analise(integer, text)
+
+-- DROP PROCEDURE IF EXISTS public.salvar_analise(integer, text);
+
+CREATE OR REPLACE PROCEDURE public.salvar_analise(
+	IN p_idproduto integer,
+	IN p_analise text)
+LANGUAGE 'plpgsql'
+AS $BODY$
+BEGIN
+    -- Verifica se o idProduto existe na tabela produto
+    IF NOT EXISTS (SELECT 1 FROM produto WHERE idProduto = p_idProduto) THEN
+        -- Lança uma exceção caso o produto não exista
+        RAISE EXCEPTION 'Produto não encontrado';
+    END IF;
+    
+    -- Insere a análise na tabela analise
+    INSERT INTO analise (idProduto, analise)
+    VALUES (p_idProduto, p_analise);
+    
+    -- Mensagem de confirmação
+    RAISE NOTICE 'Análise inserida com sucesso para o produto ID %', p_idProduto;
+END;
+$BODY$;
+ALTER PROCEDURE public.salvar_analise(integer, text)
+    OWNER TO postgres;

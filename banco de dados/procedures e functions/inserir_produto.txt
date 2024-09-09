@@ -1,0 +1,21 @@
+-- PROCEDURE: public.inserir_produto(character varying, text, numeric, character varying, character varying, text, character varying)
+
+-- DROP PROCEDURE IF EXISTS public.inserir_produto(character varying, text, numeric, character varying, character varying, text, character varying);
+
+CREATE OR REPLACE PROCEDURE public.inserir_produto(
+	IN p_titulo character varying,
+	IN p_descricao text,
+	IN p_valor numeric,
+	IN p_tipo_produto character varying,
+	IN p_tamanho_caixa character varying,
+	IN p_respostas_box text,
+	IN p_tema character varying)
+LANGUAGE 'plpgsql'
+AS $BODY$
+BEGIN
+    INSERT INTO produto (titulo, descricao, valor, tipoProduto, tamanhoCaixa, respostasBox, tema)
+    VALUES (p_titulo, p_descricao, p_valor, p_tipo_produto, p_tamanho_caixa, p_respostas_box, p_tema);
+END;
+$BODY$;
+ALTER PROCEDURE public.inserir_produto(character varying, text, numeric, character varying, character varying, text, character varying)
+    OWNER TO postgres;

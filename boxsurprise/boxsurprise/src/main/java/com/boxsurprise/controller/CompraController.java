@@ -1,0 +1,59 @@
+package com.boxsurprise.controller;
+
+
+import com.boxsurprise.dtos.response.PedidoResponseDto;
+import com.boxsurprise.dtos.request.RequestCompraItemDto;
+import com.boxsurprise.dtos.response.StandardResponse;
+import com.boxsurprise.usecase.CompraService;
+import com.boxsurprise.utils.LoggerUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/compra")
+public class CompraController {
+
+    @Autowired
+    CompraService service;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CompraController.class);
+
+
+    @PostMapping("/comprar-item")
+    public ResponseEntity<?> comprarItem(@RequestBody RequestCompraItemDto request) {
+        LoggerUtils.logRequestStart(LOGGER, "comprarItem", request);
+        long startTime = System.currentTimeMillis();
+
+        service.comprarItem(request);
+        ResponseEntity<StandardResponse> response = ResponseEntity.ok(
+                StandardResponse.builder()
+                        .message("Item adicionado ao pedido!")
+                        .build()
+        );
+        LoggerUtils.logElapsedTime(LOGGER, "comprarItem", startTime);
+        return response;
+    }
+
+    @GetMapping("/buscar-pedido/{idPedido}")
+    public ResponseEntity<?> buscarPedido(@PathVariable Integer idPedido){
+        LoggerUtils.logRequestStart(LOGGER, "buscarPedido", idPedido);
+        long startTime = System.currentTimeMillis();
+
+        PedidoResponseDto pedido = service.buscarPedido(idPedido);
+            ResponseEntity<StandardResponse> response = ResponseEntity.ok(
+                StandardResponse.builder()
+                        .message("Pedido encontrado!")
+                        .data(pedido)
+                        .build()
+            );
+            LoggerUtils.logElapsedTime(LOGGER, "buscarPedido", startTime);
+            return  response;
+    }
+
+
+
+
+}

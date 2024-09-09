@@ -1,0 +1,37 @@
+-- FUNCTION: public.buscar_produto_por_id(integer)
+
+-- DROP FUNCTION IF EXISTS public.buscar_produto_por_id(integer);
+
+CREATE OR REPLACE FUNCTION public.buscar_produto_por_id(
+	produto_id integer)
+    RETURNS TABLE(idproduto integer, titulo character varying, descricao text, valor numeric, tipoproduto character varying, tamanhocaixa character varying, respostasbox text, tema character varying) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        p.idProduto,
+        p.titulo,
+        p.descricao,
+        p.valor,
+        p.tipoProduto,
+        p.tamanhoCaixa,
+        p.respostasBox,
+        p.tema
+    FROM 
+        produto p
+    WHERE 
+        p.idProduto = produto_id;
+
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'Produto não encontrado.';
+    END IF;
+END;
+$BODY$;
+
+ALTER FUNCTION public.buscar_produto_por_id(integer)
+    OWNER TO postgres;

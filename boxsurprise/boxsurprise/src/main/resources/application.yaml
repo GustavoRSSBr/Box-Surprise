@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: Box Surprise
+
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/boxsurprise
+    username: postgres
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  hikari:
+    maximumPoolSize: 3
+    minimumIdle: 2
+    idleTimeout: 20000
+    poolName: BoxSurprise-pool
+
+openai:
+  api:
+    key: ${OPENAI_API_KEY}

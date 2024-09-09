@@ -1,0 +1,30 @@
+-- FUNCTION: public.listar_enderecos_pessoa(integer)
+
+-- DROP FUNCTION IF EXISTS public.listar_enderecos_pessoa(integer);
+
+CREATE OR REPLACE FUNCTION public.listar_enderecos_pessoa(
+	p_idpessoa integer)
+    RETURNS TABLE(idendereco integer, rua character varying, numero character varying, complemento character varying, cidade character varying, estado character, cep character) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        e.idEndereco,
+        e.rua,
+        e.numero,
+        e.complemento,
+        e.cidade,
+        e.estado,
+        e.cep
+    FROM endereco e
+    WHERE e.pessoaId = p_idPessoa;
+END;
+$BODY$;
+
+ALTER FUNCTION public.listar_enderecos_pessoa(integer)
+    OWNER TO postgres;

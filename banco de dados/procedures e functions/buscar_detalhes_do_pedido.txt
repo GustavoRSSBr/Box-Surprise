@@ -1,0 +1,47 @@
+-- FUNCTION: public.buscarinformacoesdopedido(integer)
+
+-- DROP FUNCTION IF EXISTS public.buscarinformacoesdopedido(integer);
+
+CREATE OR REPLACE FUNCTION public.buscarinformacoesdopedido(
+	pedidoidparam integer)
+    RETURNS TABLE(id_pedido integer, status_pedido character varying, data_criacao character varying, quantidade_pedido integer, nome_cliente character varying, telefone_cliente character varying, cpf_cliente character varying, rua_endereco character varying, numero_endereco character varying, complemento_endereco character varying, cidade_endereco character varying, estado_endereco character, cep_endereco character, data_compra timestamp without time zone, data_atualizacao timestamp without time zone) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
+BEGIN
+    -- Verifica se o pedido existe
+    IF NOT EXISTS (SELECT 1 FROM pedido WHERE idPedido = pedidoIdParam) THEN
+        RAISE EXCEPTION 'Pedido não encontrado';
+    END IF;
+
+    -- Retorna as informações do pedido, cliente, endereço e as novas colunas de data
+    RETURN QUERY
+    SELECT
+        p.idPedido AS id_pedido,
+        p.statusPedido AS status_pedido,
+        p.dataCriacao AS data_criacao,
+        p.quantidade AS quantidade_pedido,
+        pe.nome AS nome_cliente,
+        pe.telefone AS telefone_cliente,
+        pe.cpf AS cpf_cliente,
+        e.rua AS rua_endereco,
+        e.numero AS numero_endereco,
+        e.complemento AS complemento_endereco,
+        e.cidade AS cidade_endereco,
+        e.estado AS estado_endereco,
+        e.cep AS cep_endereco,
+        p.dataCompra AS data_compra,       -- Incluindo dataCompra
+        p.dataAtualizacao AS data_atualizacao   -- Incluindo dataAtualizacao
+    FROM pedido p
+    JOIN pessoa pe ON p.pessoaId = pe.idPessoa
+    JOIN endereco e ON p.enderecoId = e.idEndereco
+    WHERE p.idPedido = pedidoIdParam;
+
+END;
+$BODY$;
+
+ALTER FUNCTION public.buscarinformacoesdopedido(integer)
+    OWNER TO postgres;

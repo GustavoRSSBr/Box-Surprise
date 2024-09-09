@@ -1,0 +1,38 @@
+-- FUNCTION: public.buscaritensdopedido(integer)
+
+-- DROP FUNCTION IF EXISTS public.buscaritensdopedido(integer);
+
+CREATE OR REPLACE FUNCTION public.buscaritensdopedido(
+	pedidoidparam integer)
+    RETURNS TABLE(id_pedido_item integer, id_produto integer, produto_titulo character varying, produto_descricao text, produto_valor numeric, produto_quantidade integer, status_pedido_item character varying) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
+BEGIN
+    -- Verifica se o pedido existe
+    IF NOT EXISTS (SELECT 1 FROM pedido WHERE idPedido = pedidoidparam) THEN
+        RAISE EXCEPTION 'Pedido não encontrado';
+    END IF;
+
+    -- Retorna os itens do pedido (produto, quantidade, informações e status)
+    RETURN QUERY
+    SELECT
+        pi.idPedidoItem AS id_pedido_item,
+        pr.idProduto AS id_produto,        -- Retorna o idProduto
+        pr.titulo AS produto_titulo,
+        pr.descricao AS produto_descricao,
+        pr.valor AS produto_valor,
+        pi.quantidade AS produto_quantidade,
+        pi.statusPedidoItem AS status_pedido_item  -- Incluindo statusPedidoItem
+    FROM pedidoItem pi
+    JOIN produto pr ON pi.produtoId = pr.idProduto
+    WHERE pi.pedidoId = pedidoidparam;
+
+END;
+$BODY$;
+
+ALTER FUNCTION public.buscaritensdopedido(integer)
+    OWNER TO postgres;

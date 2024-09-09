@@ -1,0 +1,90 @@
+-- PROCEDURE: public.processar_pedido(integer, integer, integer, numeric, character varying, character varying, text, character varying, integer)
+
+-- DROP PROCEDURE IF EXISTS public.processar_pedido(integer, integer, integer, numeric, character varying, character varying, text, character varying, integer);
+
+CREATE OR REPLACE PROCEDURE public.processar_pedido(
+	IN p_idpessoa integer,
+	IN p_idendereco integer,
+	IN p_idproduto integer,
+	IN p_valor numeric,
+	IN p_tipoproduto character varying,
+	IN p_tamanhocaixa character varying,
+	IN p_respostasbox text,
+	IN p_tema character varying,
+	IN p_quantidade integer)
+LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+    v_idPedido INTEGER;
+    v_produtoId INTEGER;
+BEGIN
+    -- Verifica se a pessoa existe
+    IF NOT EXISTS (SELECT 1 FROM pessoa WHERE idPessoa = p_idPessoa) THEN
+        RAISE EXCEPTION 'Pessoa não encontrada';
+    END IF;
+
+    -- Verifica se o endereço existe
+    IF NOT EXISTS (SELECT 1 FROM endereco WHERE idEndereco = p_idEndereco) THEN
+        RAISE EXCEPTION 'Endereço não encontrado';
+    END IF;
+
+    -- Verifica se a pessoa já tem um pedido com status 'PENDENTE'
+    SELECT idPedido INTO v_idPedido
+    FROM pedido
+    WHERE pessoaId = p_idPessoa AND statusPedido = 'PENDENTE'
+    LIMIT 1;
+
+    -- Se não existir, cria um novo pedido
+    IF v_idPedido IS NULL THEN
+        INSERT INTO pedido (pessoaId, enderecoId, statusPedido, quantidade, dataCriacao)
+        VALUES (p_idPessoa, p_idEndereco, 'PENDENTE', 0, NOW())
+        RETURNING idPedido INTO v_idPedido;
+    END IF;
+
+    -- Processa conforme o tipo de produto
+    IF p_tipoProduto = 'CAIXA_PREDEFINIDA' THEN
+        -- Verifica se o produto existe
+        IF NOT EXISTS (SELECT 1 FROM produto WHERE idProduto = p_idProduto) THEN
+            RAISE EXCEPTION 'Produto não encontrado';
+        END IF;
+
+        -- Armazena o pedidoItem
+        INSERT INTO pedidoItem (pedidoId, produtoId, quantidade)
+        VALUES (v_idPedido, p_idProduto, p_quantidade);
+
+    ELSIF p_tipoProduto = 'CAIXA_PERSONALIDADE' THEN
+        -- Cria o novo produto
+        INSERT INTO produto (titulo, descricao, valor, tipoProduto, tamanhoCaixa, respostasBox)
+        VALUES ('Produto Personalidade', NULL, p_valor, 'CAIXA_PERSONALIDADE', p_tamanhoCaixa, p_respostasBox)
+        RETURNING idProduto INTO v_produtoId;
+
+        -- Armazena o pedidoItem
+        INSERT INTO pedidoItem (pedidoId, produtoId, quantidade)
+        VALUES (v_idPedido, v_produtoId, p_quantidade);
+
+    ELSIF p_tipoProduto = 'CAIXA_TEMATICA' THEN
+        -- Cria o novo produto
+        INSERT INTO produto (titulo, descricao, valor, tipoProduto, tamanhoCaixa, tema)
+        VALUES ('Produto Temático', NULL, p_valor, 'CAIXA_TEMATICA', p_tamanhoCaixa, p_tema)
+        RETURNING idProduto INTO v_produtoId;
+
+        -- Armazena o pedidoItem
+        INSERT INTO pedidoItem (pedidoId, produtoId, quantidade)
+        VALUES (v_idPedido, v_produtoId, p_quantidade);
+    ELSE
+        RAISE EXCEPTION 'Tipo de produto desconhecido';
+    END IF;
+
+    -- Atualiza a quantidade total do pedido
+    UPDATE pedido 
+    SET quantidade = (SELECT SUM(quantidade) FROM pedidoItem WHERE pedidoId = v_idPedido) 
+    WHERE idPedido = v_idPedido;
+
+EXCEPTION
+    -- Se ocorrer qualquer erro, lança a exceção e reverte automaticamente as operações
+    WHEN OTHERS THEN
+        RAISE;
+END;
+$BODY$;
+ALTER PROCEDURE public.processar_pedido(integer, integer, integer, numeric, character varying, character varying, text, character varying, integer)
+    OWNER TO postgres;

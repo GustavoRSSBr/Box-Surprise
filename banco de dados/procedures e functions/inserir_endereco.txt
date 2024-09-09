@@ -1,0 +1,37 @@
+-- FUNCTION: public.inserir_endereco(integer, character varying, character varying, character varying, character varying, character, character)
+
+-- DROP FUNCTION IF EXISTS public.inserir_endereco(integer, character varying, character varying, character varying, character varying, character, character);
+
+CREATE OR REPLACE FUNCTION public.inserir_endereco(
+	p_idpessoa integer,
+	p_rua character varying,
+	p_numero character varying,
+	p_complemento character varying,
+	p_cidade character varying,
+	p_estado character,
+	p_cep character)
+    RETURNS integer
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+AS $BODY$
+DECLARE
+    v_idEndereco integer;
+BEGIN
+    -- Verifica se a pessoa existe
+    IF NOT EXISTS (SELECT 1 FROM pessoa WHERE idPessoa = p_idPessoa) THEN
+        RAISE EXCEPTION 'Pessoa não encontrada';
+    END IF;
+
+    -- Insere o novo endereço na tabela endereco e associa-o à pessoa
+    INSERT INTO endereco (pessoaId, rua, numero, complemento, cidade, estado, cep)
+    VALUES (p_idPessoa, p_rua, p_numero, p_complemento, p_cidade, p_estado, p_cep)
+    RETURNING idEndereco INTO v_idEndereco;
+
+    -- Retorna o ID do endereço criado
+    RETURN v_idEndereco;
+END;
+$BODY$;
+
+ALTER FUNCTION public.inserir_endereco(integer, character varying, character varying, character varying, character varying, character, character)
+    OWNER TO postgres;
