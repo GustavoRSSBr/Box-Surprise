@@ -1,5 +1,7 @@
 package com.boxsurprise.dao;
 
+import com.boxsurprise.dtos.PedidoPessoaResponseDto;
+import com.boxsurprise.dtos.PessoaResponseDto;
 import com.boxsurprise.dtos.response.EnderecoResponseDto;
 import com.boxsurprise.model.Endereco;
 import com.boxsurprise.model.Usuario;
@@ -15,4 +17,9 @@ public interface IClienteJdbcTemplateDao {
 
 
     List<EnderecoResponseDto> listarEnderecoPessoa(Integer pessoaId);
+
+
+    List<PedidoPessoaResponseDto> listarPedidoPessoa(Integer pessoaId);
+
+    PessoaResponseDto buscarPessoaPorId(Integer idPessoa);
 }

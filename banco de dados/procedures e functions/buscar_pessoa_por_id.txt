@@ -1,0 +1,31 @@
+CREATE OR REPLACE FUNCTION buscar_pessoa_por_id(p_id INTEGER)
+RETURNS TABLE (
+    idPessoa INTEGER,
+    nome VARCHAR,
+    telefone VARCHAR,
+    cpf VARCHAR,
+    dataNascimento VARCHAR,
+    email VARCHAR
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- Verifica se a pessoa existe
+    IF NOT EXISTS (SELECT 1 FROM pessoa WHERE pessoa.idPessoa = p_id) THEN
+        RAISE EXCEPTION 'Nenhum dado foi encontrado';
+    END IF;
+
+    -- Retorna as informações da pessoa
+    RETURN QUERY
+    SELECT 
+        p.idPessoa,
+        p.nome,
+        p.telefone,
+        p.cpf,
+        p.dataNascimento,
+        u.email
+    FROM pessoa p
+    LEFT JOIN usuario u ON u.pessoaId = p.idPessoa
+    WHERE p.idPessoa = p_id;
+END;
+$$;

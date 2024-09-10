@@ -2,11 +2,14 @@ package com.boxsurprise.usecase;
 
 
 import com.boxsurprise.dao.impl.ClienteJdbcTemplateImpl;
+import com.boxsurprise.dtos.PedidoPessoaResponseDto;
+import com.boxsurprise.dtos.PessoaResponseDto;
 import com.boxsurprise.dtos.request.RequestCadastroDto;
 import com.boxsurprise.dtos.request.RequestCadastroEnderecoDto;
 import com.boxsurprise.dtos.response.EnderecoResponseDto;
 import com.boxsurprise.dtos.response.EnderecoViaCepResponseDto;
 import com.boxsurprise.enuns.ErrorCode;
+import com.boxsurprise.enuns.StatusPedido;
 import com.boxsurprise.enuns.TipoUsuario;
 import com.boxsurprise.exceptions.NegocioException;
 import com.boxsurprise.gateway.CepService;
@@ -83,4 +86,18 @@ public class ClienteService {
         return enderecos;
     }
 
+    public List<PedidoPessoaResponseDto> listarPedidoPessoa(Integer idPessoa) {
+        List<PedidoPessoaResponseDto> pedidos = serviceDao.listarPedidoPessoa(idPessoa);
+
+        if (pedidos == null || pedidos.isEmpty()){
+            throw new NegocioException(ErrorCode.NENHUM_DADO_ENCONTRADO.getCustomMessage());
+        }
+
+        return pedidos;
+    }
+
+
+    public PessoaResponseDto buscarPessoa(Integer idPessoa) {
+        return serviceDao.buscarPessoaPorId(idPessoa);
+    }
 }

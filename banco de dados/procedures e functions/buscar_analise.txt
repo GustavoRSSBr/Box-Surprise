@@ -1,0 +1,19 @@
+CREATE OR REPLACE FUNCTION buscar_analise_por_produto(p_idProduto INTEGER)
+RETURNS TABLE(idAnalise INTEGER, idProduto INTEGER, analise TEXT) AS $$
+BEGIN
+    -- Verifica se o produto tem uma análise associada
+    IF NOT EXISTS (
+        SELECT 1
+        FROM analise a
+        WHERE a.idProduto = p_idProduto
+    ) THEN
+        RAISE EXCEPTION 'Análise não encontrada';
+    END IF;
+
+    -- Retorna a análise do produto
+    RETURN QUERY
+    SELECT a.idAnalise, a.idProduto, a.analise
+    FROM analise a
+    WHERE a.idProduto = p_idProduto;
+END;
+$$ LANGUAGE plpgsql;

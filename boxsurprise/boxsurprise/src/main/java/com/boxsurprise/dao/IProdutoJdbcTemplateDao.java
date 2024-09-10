@@ -1,5 +1,6 @@
 package com.boxsurprise.dao;
 
+import com.boxsurprise.dtos.response.AnaliseResponseDto;
 import com.boxsurprise.dtos.response.ProdutoResponseDto;
 import com.boxsurprise.dtos.request.RequestProdutoDto;
 import com.boxsurprise.model.Produto;
@@ -16,5 +17,4 @@ public interface IProdutoJdbcTemplateDao {
 
     void alterarProdutoCadastrado(Integer idProduto, RequestProdutoDto request);
 
-    void salvarAnalise(Integer idProduto, String resposta);
 }

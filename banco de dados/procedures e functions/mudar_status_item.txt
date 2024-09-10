@@ -1,0 +1,24 @@
+CREATE OR REPLACE PROCEDURE atualizar_status_pedido_item(
+    p_idPedidoItem INTEGER,
+    p_novoStatus VARCHAR
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- Verifica se o item do pedido existe
+    IF NOT EXISTS (SELECT 1 FROM pedidoItem WHERE idPedidoItem = p_idPedidoItem) THEN
+        RAISE EXCEPTION 'Item do pedido não encontrado com id %', p_idPedidoItem;
+    END IF;
+
+    -- Atualiza o status do item do pedido
+    UPDATE pedidoItem
+    SET statusPedidoItem = p_novoStatus
+    WHERE idPedidoItem = p_idPedidoItem;
+
+    -- Atualiza a data de atualização do pedido associado
+    UPDATE pedido
+    SET dataAtualizacao = CURRENT_TIMESTAMP
+    WHERE idPedido = (SELECT pedidoId FROM pedidoItem WHERE idPedidoItem = p_idPedidoItem);
+    
+END;
+$$;

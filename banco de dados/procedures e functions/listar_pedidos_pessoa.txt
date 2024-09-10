@@ -1,0 +1,37 @@
+CREATE OR REPLACE FUNCTION buscar_pedido_com_endereco(p_idPessoa INTEGER)
+RETURNS TABLE(
+    idPedido INTEGER,
+    statusPedido VARCHAR,
+    quantidade INTEGER,
+    dataCriacao VARCHAR,
+    dataCompra TIMESTAMP,
+    dataAtualizacao TIMESTAMP,
+    rua VARCHAR,
+    numero VARCHAR,
+    complemento VARCHAR,
+    cidade VARCHAR,
+    estado CHAR(2),
+    cep CHAR(9)
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        p.idPedido,
+        p.statusPedido,
+        p.quantidade,
+        p.dataCriacao,
+        p.dataCompra,
+        p.dataAtualizacao,
+        e.rua,
+        e.numero,
+        e.complemento,
+        e.cidade,
+        e.estado,
+        e.cep
+    FROM pedido p
+    JOIN endereco e ON p.enderecoId = e.idEndereco
+    WHERE p.pessoaId = p_idPessoa;
+END;
+$$ LANGUAGE plpgsql;
+
+select * from pessoa;

@@ -53,7 +53,14 @@ public class CompraController {
             return  response;
     }
 
+    @PutMapping("/finalizar-compra/{idPedido}")
+    public ResponseEntity<StandardResponse> finalizarCompra(@PathVariable Integer idPedido){
+        service.finalizarCompra(idPedido);
 
+        StandardResponse response = StandardResponse.builder()
+                .message("Compra finalizada com sucesso!")
+                .build();
 
-
+        return ResponseEntity.ok(response);
+    }
 }

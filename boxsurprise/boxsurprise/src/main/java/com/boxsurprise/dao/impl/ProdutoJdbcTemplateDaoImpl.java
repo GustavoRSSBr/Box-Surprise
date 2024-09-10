@@ -1,6 +1,7 @@
 package com.boxsurprise.dao.impl;
 
 import com.boxsurprise.dao.IProdutoJdbcTemplateDao;
+import com.boxsurprise.dtos.response.AnaliseResponseDto;
 import com.boxsurprise.dtos.response.ProdutoResponseDto;
 import com.boxsurprise.dtos.request.RequestProdutoDto;
 import com.boxsurprise.model.Produto;
@@ -63,9 +64,5 @@ public class ProdutoJdbcTemplateDaoImpl implements IProdutoJdbcTemplateDao {
         );
     }
 
-    @Override
-    public void salvarAnalise(Integer idProduto, String resposta) {
-        String sql = "CALL salvar_analise(?, ?)";
-        jdbcTemplate.update(sql, idProduto, resposta);
-    }
+
 }

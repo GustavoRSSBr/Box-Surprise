@@ -7,4 +7,6 @@ public interface ICompraJdbcTemplateDao {
     void processarPedido(RequestCompraItemDto request);
 
     PedidoResponseDto buscarPedido(Integer idPedido);
+
+    void finalizarCompra(Integer idPedido, String string);
 }

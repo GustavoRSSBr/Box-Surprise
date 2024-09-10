@@ -45,7 +45,8 @@ public enum ErrorCode {
     PESSOA_NAO_ENCONTRADA("Pessoa não encontrada", "Pessoa não encontrada"),
     ANALISE_INDISPONIVEL("Análise indisponivel", "Análise indisponivel verifique se a caixa é prédefinida ou se o valor é nulo"),
     ENDERECO_NAO_ENCONTRADO("Endereço não encontrado", "Endereço não encontrado"),
-
+    ANALISE_NAO_ENCONTRADA("Análise não encontrada", "Análise não encontrada"),
+    PEDIDO_NAO_ENCONTRADO("Pedido não encontrado", "Pedido não encontrado"),
     OUTRO_ERRO("Outro erro", "Erro desconhecido");
 
     private final String message;

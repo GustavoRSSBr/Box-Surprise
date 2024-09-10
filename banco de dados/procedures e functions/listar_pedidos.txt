@@ -1,0 +1,36 @@
+-- FUNCTION: public.listar_pedidos_nao_finalizados()
+
+-- DROP FUNCTION IF EXISTS public.get_pedidos_nao_finalizados();
+
+CREATE OR REPLACE FUNCTION public.get_pedidos_nao_finalizados(
+	)
+    RETURNS TABLE(idpedido integer, statuspedido character varying, quantidade integer, datacriacao timestamp without time zone, datacompra timestamp without time zone, dataatualizacao timestamp without time zone, rua character varying, numero character varying, complemento character varying, cidade character varying, estado character, cep character) 
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+    ROWS 1000
+
+AS $BODY$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        p.idPedido,
+        p.statusPedido,
+        p.quantidade,
+        p.dataCriacao::TIMESTAMP,
+        p.dataCompra::TIMESTAMP,
+        p.dataAtualizacao::TIMESTAMP,
+        e.rua,
+        e.numero,
+        e.complemento,
+        e.cidade,
+        e.estado,
+        e.cep
+    FROM pedido p
+    JOIN endereco e ON p.enderecoId = e.idEndereco
+    WHERE p.statusPedido != 'FINALIZADO';
+END;
+$BODY$;
+
+ALTER FUNCTION public.get_pedidos_nao_finalizados()
+    OWNER TO postgres;

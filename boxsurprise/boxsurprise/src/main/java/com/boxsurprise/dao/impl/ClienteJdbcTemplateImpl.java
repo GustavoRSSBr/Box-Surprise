@@ -1,6 +1,8 @@
 package com.boxsurprise.dao.impl;
 
 import com.boxsurprise.dao.IClienteJdbcTemplateDao;
+import com.boxsurprise.dtos.PedidoPessoaResponseDto;
+import com.boxsurprise.dtos.PessoaResponseDto;
 import com.boxsurprise.dtos.response.EnderecoResponseDto;
 import com.boxsurprise.model.Endereco;
 import com.boxsurprise.model.Usuario;
@@ -58,5 +60,44 @@ public class ClienteJdbcTemplateImpl implements IClienteJdbcTemplateDao {
         );
     }
 
+
+    @Override
+    public List<PedidoPessoaResponseDto> listarPedidoPessoa(Integer pessoaId) {
+        String sql = "SELECT * FROM buscar_pedido_com_endereco(?)";
+
+        return jdbcTemplate.query(
+                sql,
+                new Object[]{pessoaId},
+                new BeanPropertyRowMapper<>(PedidoPessoaResponseDto.class)
+        );
+    }
+
+
+    @Override
+    public PessoaResponseDto buscarPessoaPorId(Integer idPessoa) {
+
+        String sqlPessoa = "SELECT * FROM buscar_pessoa_por_id(?)";
+
+
+        String sqlEnderecos = "SELECT * FROM buscar_enderecos_por_pessoa(?)";
+
+
+        PessoaResponseDto pessoa = jdbcTemplate.queryForObject(
+                sqlPessoa,
+                new Object[]{idPessoa},
+                new BeanPropertyRowMapper<>(PessoaResponseDto.class)
+        );
+
+
+        List<EnderecoResponseDto> enderecos = jdbcTemplate.query(
+                sqlEnderecos,
+                new Object[]{idPessoa},
+                new BeanPropertyRowMapper<>(EnderecoResponseDto.class)
+        );
+
+        pessoa.setEnderecos(enderecos);
+
+        return pessoa;
+    }
 
 }

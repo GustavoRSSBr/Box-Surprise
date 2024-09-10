@@ -1,5 +1,8 @@
 package com.boxsurprise.controller;
 
+import com.boxsurprise.dtos.PedidoPessoaResponseDto;
+import com.boxsurprise.dtos.PessoaResponseDto;
+import com.boxsurprise.dtos.RequestStatusPedidoDto;
 import com.boxsurprise.dtos.request.RequestCadastroDto;
 import com.boxsurprise.dtos.request.RequestCadastroEnderecoDto;
 import com.boxsurprise.dtos.response.EnderecoResponseDto;
@@ -67,6 +70,32 @@ public class ClienteController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/listar-pedidos-por-pessoa/{idPessoa}")
+    public ResponseEntity<StandardResponse> listarPedidoPessoa(@PathVariable Integer idPessoa) {
+        List<PedidoPessoaResponseDto> pedidos = service.listarPedidoPessoa(idPessoa);
+
+        StandardResponse response = StandardResponse.builder()
+                .message("Pedidos encontrados com sucesso!")
+                .data(pedidos)
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/buscar-pessoa/{idPessoa}")
+    public ResponseEntity<StandardResponse> buscarPessoa(@PathVariable Integer idPessoa) {
+        PessoaResponseDto pessoa = service.buscarPessoa(idPessoa);
+
+        StandardResponse response = StandardResponse.builder()
+                .message("Pessoa encontrada com sucesso!")
+                .data(pessoa)
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+
 
 
 

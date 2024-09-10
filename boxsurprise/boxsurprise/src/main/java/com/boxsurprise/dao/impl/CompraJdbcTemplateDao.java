@@ -6,7 +6,6 @@ import com.boxsurprise.dtos.response.PedidoItemResponseDto;
 import com.boxsurprise.dtos.response.PedidoResponseDto;
 import com.boxsurprise.dtos.request.RequestCompraItemDto;
 import com.boxsurprise.dtos.response.ProdutoResponseDto;
-import com.boxsurprise.exceptions.NegocioException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -66,4 +65,9 @@ public class CompraJdbcTemplateDao implements ICompraJdbcTemplateDao {
         return pedido;
     }
 
+    @Override
+    public void finalizarCompra(Integer idPedido, String status) {
+        String sql = "CALL finalizar_compra(?, ?)";
+        jdbcTemplate.update(sql, idPedido, status);
+    }
 }

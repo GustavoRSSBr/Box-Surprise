@@ -1,0 +1,20 @@
+CREATE OR REPLACE PROCEDURE atualizar_status_pedido(
+    p_idPedido INTEGER,
+    p_novoStatus VARCHAR
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- Verifica se o pedido existe
+    IF NOT EXISTS (SELECT 1 FROM pedido WHERE idPedido = p_idPedido) THEN
+        RAISE EXCEPTION 'Pedido não encontrado';
+    END IF;
+
+    -- Atualiza o status do pedido e a data de atualização
+    UPDATE pedido
+    SET statusPedido = p_novoStatus,
+        dataAtualizacao = CURRENT_TIMESTAMP
+    WHERE idPedido = p_idPedido;
+    
+END;
+$$;

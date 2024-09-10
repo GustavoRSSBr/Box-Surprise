@@ -1,0 +1,27 @@
+CREATE OR REPLACE FUNCTION buscar_enderecos_por_pessoa(p_id INTEGER)
+RETURNS TABLE (
+    idEndereco INTEGER,
+    rua VARCHAR,
+    numero VARCHAR,
+    complemento VARCHAR,
+    cidade VARCHAR,
+    estado CHAR(2),
+    cep CHAR(9)
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- Retorna todos os endereços da pessoa
+    RETURN QUERY
+    SELECT 
+        e.idEndereco,
+        e.rua,
+        e.numero,
+        e.complemento,
+        e.cidade,
+        e.estado,
+        e.cep
+    FROM endereco e
+    WHERE e.pessoaId = p_id;
+END;
+$$;
