@@ -2,6 +2,7 @@ package com.boxsurprise.usecase;
 
 import com.boxsurprise.config.SegurancaConfig;
 import com.boxsurprise.dao.IClienteJdbcTemplateDao;
+import com.boxsurprise.dao.ICompraJdbcTemplateDao;
 import com.boxsurprise.dao.impl.CompraJdbcTemplateDao;
 import com.boxsurprise.dtos.response.PedidoResponseDto;
 import com.boxsurprise.dtos.request.RequestCompraItemDto;
@@ -17,7 +18,7 @@ public class CompraService {
     Validador validador;
 
     @Autowired
-    CompraJdbcTemplateDao repository;
+    ICompraJdbcTemplateDao repository;
 
     @Autowired
     IClienteJdbcTemplateDao clienteJdbcTemplateDao;

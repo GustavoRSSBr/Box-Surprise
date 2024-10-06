@@ -1,6 +1,7 @@
 package com.boxsurprise.usecase;
 
 import aj.org.objectweb.asm.commons.Remapper;
+import com.boxsurprise.dao.IProdutoJdbcTemplateDao;
 import com.boxsurprise.dao.impl.ProdutoJdbcTemplateDaoImpl;
 import com.boxsurprise.dtos.response.ChatGPTResponseDto;
 import com.boxsurprise.dtos.response.ProdutoResponseDto;
@@ -23,7 +24,7 @@ public class ProdutoService {
     AnaliseServiceChatGPT chatGPT;
 
     @Autowired
-    ProdutoJdbcTemplateDaoImpl produtoJdbcTemplateDao;
+    IProdutoJdbcTemplateDao produtoJdbcTemplateDao;
 
     @Autowired
     Validador validador;
