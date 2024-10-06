@@ -29,6 +29,7 @@ public class ProdutoController {
         long startTime = System.currentTimeMillis();
 
         service.salvarDadosProduto(request);
+
         ResponseEntity<StandardResponse> response = ResponseEntity.ok(
                 StandardResponse.builder()
                         .message("Produto cadastrado com sucesso!")
@@ -39,11 +40,14 @@ public class ProdutoController {
         return response;
     }
 
-    @GetMapping("/buscar-produto-cadastrado/{id}")
-    public ResponseEntity<?> buscarProdutoCadastradoPorId(@PathVariable("id") Integer id) {
+    @GetMapping("/buscar-produto-cadastrado")
+    public ResponseEntity<?> buscarProdutoCadastradoPorId(@RequestParam Integer idProduto) {
         long startTime = System.currentTimeMillis();
-        ProdutoResponseDto produtoResponse = service.buscarProdutoPorId(id);
+
+        ProdutoResponseDto produtoResponse = service.buscarProdutoPorId(idProduto);
+
         LoggerUtils.logElapsedTime(LOGGER, "buscarProdutoPorId", startTime);
+
         return new ResponseEntity<>(produtoResponse, HttpStatus.OK);
     }
 
@@ -51,13 +55,16 @@ public class ProdutoController {
     @GetMapping("/listar-produtos-cadastrados")
     public ResponseEntity<?> listarProdutosCadastrados() {
         long startTime = System.currentTimeMillis();
+
         List<ProdutoResponseDto> response = service.listarProdutosCadastrados();
+
         LoggerUtils.logElapsedTime(LOGGER, "listar", startTime);
+
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PutMapping("/alterar-produto-cadastrado/{idProduto}")
-    public ResponseEntity<?> alterarProdutoCadastrado( @PathVariable Integer idProduto, @RequestBody RequestProdutoDto request) {
+    @PutMapping("/alterar-produto-cadastrado")
+    public ResponseEntity<?> alterarProdutoCadastrado( @RequestParam Integer idProduto, @RequestBody RequestProdutoDto request) {
         LoggerUtils.logRequestStart(LOGGER, "alterarProdutoCadastrado", request);
         long startTime = System.currentTimeMillis();
 
@@ -69,6 +76,7 @@ public class ProdutoController {
         );
 
         LoggerUtils.logElapsedTime(LOGGER, "alterarProdutoCadastrado", startTime);
+
         return response;
     }
 }

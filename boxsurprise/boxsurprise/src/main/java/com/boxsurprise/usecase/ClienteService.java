@@ -1,15 +1,16 @@
 package com.boxsurprise.usecase;
 
 
-import com.boxsurprise.dao.impl.ClienteJdbcTemplateImpl;
+import com.boxsurprise.config.SegurancaConfig;
+import com.boxsurprise.dao.IClienteJdbcTemplateDao;
 import com.boxsurprise.dtos.PedidoPessoaResponseDto;
 import com.boxsurprise.dtos.PessoaResponseDto;
+import com.boxsurprise.dtos.request.LoginRequestDTO;
 import com.boxsurprise.dtos.request.RequestCadastroDto;
 import com.boxsurprise.dtos.request.RequestCadastroEnderecoDto;
 import com.boxsurprise.dtos.response.EnderecoResponseDto;
 import com.boxsurprise.dtos.response.EnderecoViaCepResponseDto;
 import com.boxsurprise.enuns.ErrorCode;
-import com.boxsurprise.enuns.StatusPedido;
 import com.boxsurprise.enuns.TipoUsuario;
 import com.boxsurprise.exceptions.NegocioException;
 import com.boxsurprise.gateway.CepService;
@@ -26,13 +27,17 @@ import java.util.List;
 public class ClienteService {
 
     @Autowired
-    ClienteJdbcTemplateImpl serviceDao;
+    IClienteJdbcTemplateDao serviceDao;
+
 
     @Autowired
     CepService cepService;
 
     @Autowired
     Validador validador;
+
+    @Autowired
+    SegurancaConfig seguranca;
 
     public void salvarDadosCadastrais(RequestCadastroDto request) {
 
@@ -47,7 +52,7 @@ public class ClienteService {
 
         Usuario usuario = Usuario.builder()
                 .email(request.getEmail())
-                .senha(request.getSenha())
+                .senha(seguranca.criptografarSenha(request.getSenha()))
                 .tipoUsuario(TipoUsuario.CLIENTE)
                 .pessoa(pessoa)
                 .build();
@@ -56,12 +61,26 @@ public class ClienteService {
         serviceDao.salvarDadosCadastrais(usuario);
     }
 
-    public Integer cadastrarEndereco(Integer idCliente, RequestCadastroEnderecoDto request) {
-        EnderecoViaCepResponseDto enderecoApi = cepService.buscaEnderecoPor(request.getCep());
 
-        if (idCliente == null) {
-            throw new NegocioException(ErrorCode.ID_PRODUTO_NULO.getCustomMessage());
+    public String autenticar(LoginRequestDTO loginRequestDTO) {
+        if (!serviceDao.existeUsuario(loginRequestDTO.getEmail())) {
+            throw new NegocioException(ErrorCode.EMAIL_USUARIO_INVALIDO.getCustomMessage());
         }
+
+        Usuario usuario = serviceDao.obterPorEmail(loginRequestDTO.getEmail());
+
+        if (seguranca.compararSenhaHash(loginRequestDTO.getSenha(), usuario.getSenha())) {
+            return seguranca.gerarToken(usuario);
+        }
+
+        throw new NegocioException(ErrorCode.SENHA_USUARIO_INCORRETA.getCustomMessage());
+    }
+
+    public Integer cadastrarEndereco(String token, RequestCadastroEnderecoDto request) {
+        EnderecoViaCepResponseDto enderecoApi = cepService.buscaEnderecoPor(request.getCep());
+        String email = seguranca.buscarEmailToken(token);
+
+        Integer idCliente = serviceDao.buscarIdPessoaPorEmail(email);
 
         Endereco endereco = Endereco.builder()
                 .cep(enderecoApi.getCep())
@@ -76,7 +95,12 @@ public class ClienteService {
     }
 
 
-    public List<EnderecoResponseDto> listarEnderecoPessoa(Integer pessoaId) {
+    public List<EnderecoResponseDto> listarEnderecoPessoa(String token) {
+
+        String email = seguranca.buscarEmailToken(token);
+
+        Integer pessoaId = serviceDao.buscarIdPessoaPorEmail(email);
+
         List<EnderecoResponseDto> enderecos = serviceDao.listarEnderecoPessoa(pessoaId);
 
         if (enderecos == null || enderecos.isEmpty()){
@@ -86,7 +110,11 @@ public class ClienteService {
         return enderecos;
     }
 
-    public List<PedidoPessoaResponseDto> listarPedidoPessoa(Integer idPessoa) {
+    public List<PedidoPessoaResponseDto> listarPedidoPessoa(String token) {
+        String email = seguranca.buscarEmailToken(token);
+
+        Integer idPessoa = serviceDao.buscarIdPessoaPorEmail(email);
+
         List<PedidoPessoaResponseDto> pedidos = serviceDao.listarPedidoPessoa(idPessoa);
 
         if (pedidos == null || pedidos.isEmpty()){
@@ -97,7 +125,9 @@ public class ClienteService {
     }
 
 
-    public PessoaResponseDto buscarPessoa(Integer idPessoa) {
-        return serviceDao.buscarPessoaPorId(idPessoa);
+    public PessoaResponseDto buscarPessoa(String email) {
+
+
+        return serviceDao.buscarPessoaPorEmail(email);
     }
 }

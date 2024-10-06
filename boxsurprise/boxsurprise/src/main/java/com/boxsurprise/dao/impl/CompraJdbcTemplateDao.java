@@ -21,11 +21,11 @@ public class CompraJdbcTemplateDao implements ICompraJdbcTemplateDao {
 
 
     @Override
-    public void processarPedido(RequestCompraItemDto requestCompraItemDto) {
+    public void processarPedido(Integer idPessoa, RequestCompraItemDto requestCompraItemDto) {
         String sql = "CALL processar_pedido(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         jdbcTemplate.update(sql,
-                requestCompraItemDto.getIdPessoa(),
+                idPessoa,
                 requestCompraItemDto.getIdEndereco(),
                 requestCompraItemDto.getIdProduto(),
                 requestCompraItemDto.getValorTamanhoCaixa(),

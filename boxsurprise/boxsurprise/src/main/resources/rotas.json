@@ -1,0 +1,74 @@
+[
+  {
+    "path": "/cliente/cadastrar-cliente",
+    "roles": []
+  },
+  {
+    "path": "/cliente/login",
+    "roles": []
+  },
+  {
+    "path": "/produto/cadastrar-produto",
+    "roles": ["ADM"]
+  },
+  {
+    "path": "/cliente/cadastrar-endereco",
+    "roles": ["CLIENTE"]
+  },
+  {
+    "path": "/compra/comprar-item",
+    "roles": ["CLIENTE"]
+  },
+  {
+    "path": "/adm/gerar-analise/",
+    "roles": ["ADM"]
+  },
+  {
+    "path": "/produto/alterar-produto-cadastrado",
+    "roles": ["ADM"]
+  },
+  {
+    "path": "/adm/mudar-status-item",
+    "roles": ["ADM"]
+  },
+  {
+    "path": "/adm/mudar-status-pedido",
+    "roles": ["ADM"]
+  },
+  {
+    "path": "/produto/buscar-produto-cadastrado",
+    "roles": ["ADM", "CLIENTE"]
+  },
+  {
+    "path": "/produto/listar-produtos-cadastrados",
+    "roles": []
+  },
+  {
+    "path": "/compra/buscar-pedido",
+    "roles": ["ADM", "CLIENTE"]
+  },
+  {
+    "path": "/adm/buscar-analise-produto",
+    "roles": ["ADM"]
+  },
+  {
+    "path": "/cliente/listar-endereco-pessoa",
+    "roles": ["CLIENTE"]
+  },
+  {
+    "path": "/cliente/listar-pedidos-por-pessoa",
+    "roles": ["CLIENTE"]
+  },
+  {
+    "path": "/compra/finalizar-compra",
+    "roles": ["CLIENTE"]
+  },
+  {
+    "path": "/adm/listar-todos-pedidos-nao-finalizado",
+    "roles": ["ADM"]
+  },
+  {
+    "path": "/cliente/buscar-pessoa",
+    "roles": ["ADM", "CLIENTE"]
+  }
+]

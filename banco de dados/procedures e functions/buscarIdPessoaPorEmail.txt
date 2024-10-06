@@ -1,0 +1,16 @@
+CREATE OR REPLACE FUNCTION buscar_id_pessoa_por_email(email_input VARCHAR)
+RETURNS INTEGER AS $$
+DECLARE
+    id_pessoa INTEGER;
+BEGIN
+    -- Busca o id da pessoa relacionada ao email fornecido
+    SELECT p.idPessoa
+    INTO id_pessoa
+    FROM usuario u
+    JOIN pessoa p ON u.pessoaId = p.idPessoa
+    WHERE u.email = email_input;
+
+    -- Retorna o idPessoa
+    RETURN id_pessoa;
+END;
+$$ LANGUAGE plpgsql;

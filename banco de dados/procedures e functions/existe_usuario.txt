@@ -1,0 +1,12 @@
+CREATE OR REPLACE FUNCTION EXISTE_USUARIO(email_input VARCHAR)
+RETURNS BOOLEAN AS $$
+DECLARE
+    usuario_existe BOOLEAN;
+BEGIN
+    -- Verifica se existe um usuário com o email fornecido
+    SELECT EXISTS(SELECT 1 FROM usuario WHERE email = email_input) INTO usuario_existe;
+    
+    -- Retorna true se o usuário existir, senão retorna false
+    RETURN usuario_existe;
+END;
+$$ LANGUAGE plpgsql;

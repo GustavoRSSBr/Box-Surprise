@@ -1,20 +1,15 @@
-package com.boxsurprise.model;
+package com.boxsurprise.dtos.request;
 
-import com.boxsurprise.enuns.TipoUsuario;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Usuario {
-    private Long idUsuario;
+@Builder
+@Data
+public class LoginRequestDTO {
     private String email;
     private String senha;
-    private Pessoa pessoa;
-    private TipoUsuario tipoUsuario;
 }
-

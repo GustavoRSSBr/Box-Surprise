@@ -74,30 +74,47 @@ public class ClienteJdbcTemplateImpl implements IClienteJdbcTemplateDao {
 
 
     @Override
-    public PessoaResponseDto buscarPessoaPorId(Integer idPessoa) {
+    public PessoaResponseDto buscarPessoaPorEmail(String email) {
 
-        String sqlPessoa = "SELECT * FROM buscar_pessoa_por_id(?)";
-
+        String sqlPessoa = "SELECT * FROM buscar_pessoa_por_email(?)";
 
         String sqlEnderecos = "SELECT * FROM buscar_enderecos_por_pessoa(?)";
 
 
         PessoaResponseDto pessoa = jdbcTemplate.queryForObject(
                 sqlPessoa,
-                new Object[]{idPessoa},
+                new Object[]{email},
                 new BeanPropertyRowMapper<>(PessoaResponseDto.class)
         );
 
 
         List<EnderecoResponseDto> enderecos = jdbcTemplate.query(
                 sqlEnderecos,
-                new Object[]{idPessoa},
+                new Object[]{pessoa.getIdPessoa()},
                 new BeanPropertyRowMapper<>(EnderecoResponseDto.class)
         );
 
         pessoa.setEnderecos(enderecos);
 
         return pessoa;
+    }
+
+    @Override
+    public boolean existeUsuario(String email) {
+        String sql = "SELECT EXISTE_USUARIO(?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, email);
+    }
+
+    @Override
+    public Usuario obterPorEmail(String email) {
+        String sql = "SELECT * FROM BUSCAR_USUARIO_POR_EMAIL(?)";
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Usuario.class), email);
+    }
+
+    @Override
+    public Integer buscarIdPessoaPorEmail(String email) {
+        String sql = "SELECT buscar_id_pessoa_por_email(?)";
+        return jdbcTemplate.queryForObject(sql, new Object[]{email}, Integer.class);
     }
 
 }

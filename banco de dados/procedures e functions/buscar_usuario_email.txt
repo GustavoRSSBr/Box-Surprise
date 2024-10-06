@@ -1,0 +1,29 @@
+CREATE OR REPLACE FUNCTION BUSCAR_USUARIO_POR_EMAIL(email_input VARCHAR)
+RETURNS TABLE (
+    id_usuario INTEGER,
+    email VARCHAR,
+    senha VARCHAR,
+    id_pessoa INTEGER,
+    nome VARCHAR,
+    telefone VARCHAR,
+    cpf VARCHAR,
+    data_nascimento VARCHAR,
+    tipo_usuario VARCHAR
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        u.idUsuario,
+        u.email,
+        u.senha,
+        p.idPessoa,
+        p.nome,
+        p.telefone,
+        p.cpf,
+        p.dataNascimento,
+        u.tipoUsuario
+    FROM usuario u
+    JOIN pessoa p ON u.pessoaId = p.idPessoa
+    WHERE u.email = email_input;
+END;
+$$ LANGUAGE plpgsql;

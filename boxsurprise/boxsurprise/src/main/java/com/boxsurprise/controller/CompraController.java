@@ -4,6 +4,7 @@ package com.boxsurprise.controller;
 import com.boxsurprise.dtos.response.PedidoResponseDto;
 import com.boxsurprise.dtos.request.RequestCompraItemDto;
 import com.boxsurprise.dtos.response.StandardResponse;
+import com.boxsurprise.dtos.response.StandardResponseDTO;
 import com.boxsurprise.usecase.CompraService;
 import com.boxsurprise.utils.LoggerUtils;
 import org.slf4j.Logger;
@@ -23,22 +24,24 @@ public class CompraController {
 
 
     @PostMapping("/comprar-item")
-    public ResponseEntity<?> comprarItem(@RequestBody RequestCompraItemDto request) {
+    public ResponseEntity<?> comprarItem(@RequestHeader(value = "Authorization") String token, @RequestBody RequestCompraItemDto request) {
         LoggerUtils.logRequestStart(LOGGER, "comprarItem", request);
         long startTime = System.currentTimeMillis();
 
-        service.comprarItem(request);
-        ResponseEntity<StandardResponse> response = ResponseEntity.ok(
-                StandardResponse.builder()
-                        .message("Item adicionado ao pedido!")
+        service.comprarItem(token, request);
+
+        ResponseEntity<StandardResponseDTO> response = ResponseEntity.ok(
+                StandardResponseDTO.builder()
+                        .mensagem("Item adicionado ao pedido!")
                         .build()
         );
+
         LoggerUtils.logElapsedTime(LOGGER, "comprarItem", startTime);
         return response;
     }
 
-    @GetMapping("/buscar-pedido/{idPedido}")
-    public ResponseEntity<?> buscarPedido(@PathVariable Integer idPedido){
+    @GetMapping("/buscar-pedido")
+    public ResponseEntity<?> buscarPedido(@RequestParam Integer idPedido){
         LoggerUtils.logRequestStart(LOGGER, "buscarPedido", idPedido);
         long startTime = System.currentTimeMillis();
 
@@ -49,17 +52,23 @@ public class CompraController {
                         .data(pedido)
                         .build()
             );
+
             LoggerUtils.logElapsedTime(LOGGER, "buscarPedido", startTime);
             return  response;
     }
 
-    @PutMapping("/finalizar-compra/{idPedido}")
-    public ResponseEntity<StandardResponse> finalizarCompra(@PathVariable Integer idPedido){
+    @PutMapping("/finalizar-compra")
+    public ResponseEntity<StandardResponse> finalizarCompra(@RequestParam Integer idPedido){
+        LoggerUtils.logRequestStart(LOGGER, "finalizarCompra", idPedido);
+        long startTime = System.currentTimeMillis();
+
         service.finalizarCompra(idPedido);
 
         StandardResponse response = StandardResponse.builder()
                 .message("Compra finalizada com sucesso!")
                 .build();
+
+        LoggerUtils.logElapsedTime(LOGGER, "buscarPedido", startTime);
 
         return ResponseEntity.ok(response);
     }

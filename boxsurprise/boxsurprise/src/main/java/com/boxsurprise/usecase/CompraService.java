@@ -1,5 +1,7 @@
 package com.boxsurprise.usecase;
 
+import com.boxsurprise.config.SegurancaConfig;
+import com.boxsurprise.dao.IClienteJdbcTemplateDao;
 import com.boxsurprise.dao.impl.CompraJdbcTemplateDao;
 import com.boxsurprise.dtos.response.PedidoResponseDto;
 import com.boxsurprise.dtos.request.RequestCompraItemDto;
@@ -17,10 +19,17 @@ public class CompraService {
     @Autowired
     CompraJdbcTemplateDao repository;
 
+    @Autowired
+    IClienteJdbcTemplateDao clienteJdbcTemplateDao;
 
-    public void comprarItem(RequestCompraItemDto request) {
+    @Autowired
+    SegurancaConfig seguranca;
 
-        repository.processarPedido(request);
+
+    public void comprarItem(String token ,RequestCompraItemDto request) {
+        String email = seguranca.buscarEmailToken(token);
+        Integer idPessoa = clienteJdbcTemplateDao.buscarIdPessoaPorEmail(email);
+        repository.processarPedido(idPessoa,request);
 
     }
 

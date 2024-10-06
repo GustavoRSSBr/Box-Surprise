@@ -2,11 +2,10 @@ package com.boxsurprise.controller;
 
 import com.boxsurprise.dtos.PedidoPessoaResponseDto;
 import com.boxsurprise.dtos.PessoaResponseDto;
-import com.boxsurprise.dtos.RequestStatusPedidoDto;
+import com.boxsurprise.dtos.request.LoginRequestDTO;
 import com.boxsurprise.dtos.request.RequestCadastroDto;
 import com.boxsurprise.dtos.request.RequestCadastroEnderecoDto;
-import com.boxsurprise.dtos.response.EnderecoResponseDto;
-import com.boxsurprise.dtos.response.StandardResponse;
+import com.boxsurprise.dtos.response.*;
 import com.boxsurprise.usecase.ClienteService;
 import com.boxsurprise.utils.LoggerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,26 +31,47 @@ public class ClienteController {
         long startTime = System.currentTimeMillis();
 
         service.salvarDadosCadastrais(request);
+
         ResponseEntity<StandardResponse> response = ResponseEntity.ok(
                 StandardResponse.builder()
                         .message("Cliente cadastrado com sucesso!")
                         .build()
         );
+
         LoggerUtils.logElapsedTime(LOGGER, "cadastrarCliente", startTime);
         return response;
     }
 
-    @PostMapping("/cadastrar-endereco/{idCliente}")
-    public ResponseEntity<?> cadastrarEndereco(@PathVariable Integer idCliente, @RequestBody RequestCadastroEnderecoDto request) {
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequestDTO) {
+        LOGGER.info("Início do método login com request: {}", loginRequestDTO.getEmail());
+        long startTime = System.currentTimeMillis();
+
+        TokenResponseDTO tokenResponseDTO = new TokenResponseDTO(service.autenticar(loginRequestDTO));
+
+        long endTime = System.currentTimeMillis();
+        long elapsedTime = endTime - startTime;
+        LOGGER.info("Tempo decorrido: " + elapsedTime + " milissegundos");
+
+        return ResponseEntity.ok(
+                StandardResponseDTO.builder()
+                        .mensagem("Usuário logado com sucesso!")
+                        .dados(tokenResponseDTO)
+                        .build()
+        );
+    }
+
+    @PostMapping("/cadastrar-endereco")
+    public ResponseEntity<?> cadastrarEndereco(@RequestHeader(value = "Authorization") String token, @RequestBody RequestCadastroEnderecoDto request) {
         LoggerUtils.logRequestStart(LOGGER, "cadastrarEndereco", request);
         long startTime = System.currentTimeMillis();
 
-        Integer enderecoId = service.cadastrarEndereco(idCliente, request);
+        IdResponseDTO enderecoId = new IdResponseDTO(service.cadastrarEndereco(token, request));
 
-        ResponseEntity<StandardResponse> response = ResponseEntity.ok(
-                StandardResponse.builder()
-                        .message("Endereço cadastrado com sucesso!")
-                        .data(enderecoId)
+        ResponseEntity<StandardResponseDTO> response = ResponseEntity.ok(
+                StandardResponseDTO.builder()
+                        .mensagem("Endereço cadastrado com sucesso!")
+                        .dados(enderecoId)
                         .build()
         );
 
@@ -59,38 +79,55 @@ public class ClienteController {
         return response;
     }
 
-    @GetMapping("/listar-enderecos/{idPessoa}")
-    public ResponseEntity<StandardResponse> listarEnderecoPessoa(@PathVariable Integer idPessoa) {
-        List<EnderecoResponseDto> enderecos = service.listarEnderecoPessoa(idPessoa);
+    @GetMapping("/listar-endereco-pessoa")
+    public ResponseEntity<StandardResponse> listarEnderecoPessoa(@RequestHeader(value = "Authorization") String token) {
+        LoggerUtils.logRequestStart(LOGGER, "listarEnderecoPessoa", token);
+        long startTime = System.currentTimeMillis();
+
+        List<EnderecoResponseDto> enderecos = service.listarEnderecoPessoa(token);
 
         StandardResponse response = StandardResponse.builder()
                 .message("Endereços encontrados com sucesso!")
                 .data(enderecos)
                 .build();
 
+        LoggerUtils.logElapsedTime(LOGGER, "listarEnderecoPessoa", startTime);
+
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/listar-pedidos-por-pessoa/{idPessoa}")
-    public ResponseEntity<StandardResponse> listarPedidoPessoa(@PathVariable Integer idPessoa) {
-        List<PedidoPessoaResponseDto> pedidos = service.listarPedidoPessoa(idPessoa);
+    @GetMapping("/listar-pedidos-por-pessoa")
+    public ResponseEntity<StandardResponse> listarPedidoPessoa(@RequestHeader(value = "Authorization") String token) {
+        LoggerUtils.logRequestStart(LOGGER, "listarPedidoPessoa", token);
+        long startTime = System.currentTimeMillis();
+
+        List<PedidoPessoaResponseDto> pedidos = service.listarPedidoPessoa(token);
 
         StandardResponse response = StandardResponse.builder()
                 .message("Pedidos encontrados com sucesso!")
                 .data(pedidos)
                 .build();
 
+        LoggerUtils.logElapsedTime(LOGGER, "listarPedidoPessoa", startTime);
+
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/buscar-pessoa/{idPessoa}")
-    public ResponseEntity<StandardResponse> buscarPessoa(@PathVariable Integer idPessoa) {
-        PessoaResponseDto pessoa = service.buscarPessoa(idPessoa);
+    @GetMapping("/buscar-pessoa")
+    public ResponseEntity<StandardResponse> buscarPessoa(@RequestParam String email) {
+        LoggerUtils.logRequestStart(LOGGER, "buscarPessoa", email);
+        long startTime = System.currentTimeMillis();
+
+        System.out.println(email);
+
+        PessoaResponseDto pessoa = service.buscarPessoa(email);
 
         StandardResponse response = StandardResponse.builder()
                 .message("Pessoa encontrada com sucesso!")
                 .data(pessoa)
                 .build();
+
+        LoggerUtils.logElapsedTime(LOGGER, "buscarPessoa", startTime);
 
         return ResponseEntity.ok(response);
     }

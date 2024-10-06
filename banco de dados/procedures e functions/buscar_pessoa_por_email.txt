@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION buscar_pessoa_por_id(p_id INTEGER)
+CREATE OR REPLACE FUNCTION buscar_pessoa_por_email(email_input VARCHAR)
 RETURNS TABLE (
     idPessoa INTEGER,
     nome VARCHAR,
@@ -10,12 +10,12 @@ RETURNS TABLE (
 LANGUAGE plpgsql
 AS $$
 BEGIN
-    -- Verifica se a pessoa existe
-    IF NOT EXISTS (SELECT 1 FROM pessoa WHERE pessoa.idPessoa = p_id) THEN
+    -- Verifica se existe um usuário com o email fornecido
+    IF NOT EXISTS (SELECT 1 FROM usuario WHERE usuario.email = email_input) THEN
         RAISE EXCEPTION 'Nenhum dado foi encontrado';
     END IF;
 
-    -- Retorna as informações da pessoa
+    -- Retorna as informações da pessoa associada ao email
     RETURN QUERY
     SELECT 
         p.idPessoa,
@@ -25,7 +25,7 @@ BEGIN
         p.dataNascimento,
         u.email
     FROM pessoa p
-    LEFT JOIN usuario u ON u.pessoaId = p.idPessoa
-    WHERE p.idPessoa = p_id;
+    JOIN usuario u ON u.pessoaId = p.idPessoa
+    WHERE u.email = email_input;
 END;
 $$;

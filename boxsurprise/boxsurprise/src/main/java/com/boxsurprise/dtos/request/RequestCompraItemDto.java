@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestCompraItemDto {
-    private Integer idPessoa;
     private Integer idEndereco;
     private Integer idProduto;
     private BigDecimal valor;

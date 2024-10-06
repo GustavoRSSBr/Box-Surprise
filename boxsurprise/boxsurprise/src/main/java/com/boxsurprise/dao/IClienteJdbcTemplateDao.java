@@ -21,5 +21,11 @@ public interface IClienteJdbcTemplateDao {
 
     List<PedidoPessoaResponseDto> listarPedidoPessoa(Integer pessoaId);
 
-    PessoaResponseDto buscarPessoaPorId(Integer idPessoa);
+    PessoaResponseDto buscarPessoaPorEmail(String email);
+
+    boolean existeUsuario(String email);
+
+    Usuario obterPorEmail(String email);
+
+    Integer buscarIdPessoaPorEmail(String email);
 }

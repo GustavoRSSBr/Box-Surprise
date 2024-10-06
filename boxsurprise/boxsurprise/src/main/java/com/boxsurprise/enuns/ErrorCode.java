@@ -4,16 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum ErrorCode {
-    AVALIACAO_EXISTE("Avaliação já existe", "Avaliação já existe"),
-    EMPRESA_NAO_EXISTE("Empresa não existe", "Empresa não existe"),
-    FREELANCER_NAO_EXISTE("Freelancer não existe", "Freelancer não existe"),
-    PROJETO_NAO_EXISTE("Projeto não existe", "Projeto não existe"),
-    FREELANCER_NAO_ASSOCIADO("Freelancer não está associado ao projeto", "Freelancer não está associado ao projeto"),
-    EMPRESA_NAO_ASSOCIADA("Empresa não está associada ao projeto", "Empresa não está associada ao projeto"),
-    NOTA_INVALIDA("Nota deve ser entre 1 e 5", "Nota deve ser entre 1 e 5"),
     EMAIL_JA_CADASTRADO("Email", "Email já está cadastrado"),
     CPF_JA_CADASTRADO("CPF", "CPF já está cadastrado"),
-    CNPJ_JA_CADASTRADO("CNPJ", "CNPJ já está cadastrado"),
     ID_EMPRESA_NAO_EXISTE("ID de Empresa", "ID de Empresa não existe"),
     ID_PROJETO_NAO_EXISTE("ID de Projeto", "ID de Projeto não existe"),
     ID_FREELANCER_NAO_EXISTE("ID de Freelancer", "ID de Freelancer não existe"),
@@ -30,7 +22,6 @@ public enum ErrorCode {
     TELEFONE_INVALIDO("Número de telefone inválido", "Número de telefone inválido: "),
     LISTA_VAZIA("lista vazia", "Nenhum dado foi encontrado!"),
     OBJETO_VAZIO("objeto não encontrado", "Nenhum dado foi encontrado!"),
-    PROJETO_NAO_EXCLUIDO("Projeto com id", "Projeto não pode ser excluído porque está associado a um freelancer."),
     DADO_INVALIDO("Dado invalido no Json", "Dado Inválido no Json"),
     ID_OBRIGATORIA("id invalido", "Voce deverá passar o id do cliente na requisição"),
     ESTRATEGIA_DUPLICADA("Estrategia Duplicada", "Estrategia duplicada para esse tipo de objeto: "),
@@ -47,6 +38,13 @@ public enum ErrorCode {
     ENDERECO_NAO_ENCONTRADO("Endereço não encontrado", "Endereço não encontrado"),
     ANALISE_NAO_ENCONTRADA("Análise não encontrada", "Análise não encontrada"),
     PEDIDO_NAO_ENCONTRADO("Pedido não encontrado", "Pedido não encontrado"),
+    DESC_ROLE_SEM_PERMISSAO("sempermissão", "SEM PERMISSÃO"),
+    DESC_BAD_REQUEST_HEADERS("loginincorreto","Efetue o login corretamente" ),
+    DESC_TOKEN_INVALIDO("tokeninvalido", "Token inválido"),
+    EMAIL_USUARIO_INVALIDO("Email invalido", "Email inválido" ),
+    PRODUTO_NAO_ENCONTRADO("Produto não encontrado.", "Produto não encontrado."),
+    SENHA_USUARIO_INCORRETA("Senha incorreta", "Senha incorreta" ),
+    NENHUM_DADO_PESSOA_ENCONTRADO("nenhum dado foi encontrado", "pessoa não encontrada"),
     OUTRO_ERRO("Outro erro", "Erro desconhecido");
 
     private final String message;

@@ -1,5 +1,7 @@
 package com.boxsurprise.usecase;
 
+import com.boxsurprise.dao.IAdmJdbcTemplateDao;
+import com.boxsurprise.dao.IProdutoJdbcTemplateDao;
 import com.boxsurprise.dao.impl.AdmJdbcTemplateImpl;
 import com.boxsurprise.dao.impl.ProdutoJdbcTemplateDaoImpl;
 import com.boxsurprise.dtos.PedidoPessoaResponseDto;
@@ -22,10 +24,10 @@ import java.util.List;
 public class AdmService {
 
     @Autowired
-    ProdutoJdbcTemplateDaoImpl produtoJdbcTemplateDao;
+    IProdutoJdbcTemplateDao produtoJdbcTemplateDao;
 
     @Autowired
-    AdmJdbcTemplateImpl admDao;
+    IAdmJdbcTemplateDao admDao;
 
     @Autowired
     AnaliseServiceChatGPT chatGPT;

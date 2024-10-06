@@ -4,7 +4,8 @@ import com.boxsurprise.dtos.response.PedidoResponseDto;
 import com.boxsurprise.dtos.request.RequestCompraItemDto;
 
 public interface ICompraJdbcTemplateDao {
-    void processarPedido(RequestCompraItemDto request);
+
+    void processarPedido(Integer idPessoa, RequestCompraItemDto requestCompraItemDto);
 
     PedidoResponseDto buscarPedido(Integer idPedido);
 
