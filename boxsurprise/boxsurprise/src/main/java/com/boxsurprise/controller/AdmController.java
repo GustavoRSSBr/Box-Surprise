@@ -1,15 +1,11 @@
 package com.boxsurprise.controller;
 
-import com.boxsurprise.dtos.PedidoPessoaResponseDto;
-import com.boxsurprise.dtos.RequestStatusItemDto;
-import com.boxsurprise.dtos.RequestStatusPedidoDto;
-import com.boxsurprise.dtos.request.RequestCadastroDto;
+import com.boxsurprise.dtos.response.PedidoPessoaResponseDto;
+import com.boxsurprise.dtos.response.RequestStatusItemDto;
+import com.boxsurprise.dtos.response.RequestStatusPedidoDto;
 import com.boxsurprise.dtos.response.AnaliseResponseDto;
-import com.boxsurprise.dtos.response.PedidoResponseDto;
-import com.boxsurprise.dtos.response.StandardResponse;
-import com.boxsurprise.gateway.AnaliseServiceChatGPT;
+import com.boxsurprise.dtos.response.StandardResponseDTO;
 import com.boxsurprise.usecase.AdmService;
-import com.boxsurprise.usecase.ProdutoService;
 import com.boxsurprise.utils.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,10 +39,10 @@ public class AdmController {
 
         AnaliseResponseDto analise = service.buscarAnalise(idProduto);
 
-        ResponseEntity<StandardResponse> response = ResponseEntity.ok(
-                StandardResponse.builder()
-                        .message("Análise encontrada!")
-                        .data(analise)
+        ResponseEntity<StandardResponseDTO> response = ResponseEntity.ok(
+                StandardResponseDTO.builder()
+                        .mensagem("Análise encontrada!")
+                        .dados(analise)
                         .build()
         );
         LoggerUtils.logElapsedTime(LOGGER, "buscarAnalise", startTime);
@@ -54,15 +50,15 @@ public class AdmController {
     }
 
     @GetMapping("/listar-todos-pedidos-nao-finalizado")
-    public ResponseEntity<StandardResponse> listarTodosPedidos() {
+    public ResponseEntity<?> listarTodosPedidos() {
         LoggerUtils.logRequestStart(LOGGER, "listarTodosPedidos", null);
         long startTime = System.currentTimeMillis();
 
         List<PedidoPessoaResponseDto> pedidos = service.listarPedidos();
 
-        StandardResponse response = StandardResponse.builder()
-                .message("Pedidos encontrados com sucesso!")
-                .data(pedidos)
+        StandardResponseDTO response = StandardResponseDTO.builder()
+                .mensagem("Pedidos encontrados com sucesso!")
+                .dados(pedidos)
                 .build();
 
         LoggerUtils.logElapsedTime(LOGGER, "listarTodosPedidos", startTime);
@@ -71,14 +67,14 @@ public class AdmController {
     }
 
     @PutMapping("/mudar-status-item")
-    public ResponseEntity<StandardResponse> mudarStatusPedidoItem(@RequestBody RequestStatusItemDto request){
+    public ResponseEntity<?> mudarStatusPedidoItem(@RequestBody RequestStatusItemDto request){
         LoggerUtils.logRequestStart(LOGGER, "mudarStatusPedidoItem", null);
         long startTime = System.currentTimeMillis();
 
         service.mudarStatusPedidoItem(request);
 
-        StandardResponse response = StandardResponse.builder()
-                .message("Item atualizado com sucesso!")
+        StandardResponseDTO response = StandardResponseDTO.builder()
+                .mensagem("Item atualizado com sucesso!")
                 .build();
 
         LoggerUtils.logElapsedTime(LOGGER, "mudarStatusPedidoItem", startTime);
@@ -86,14 +82,14 @@ public class AdmController {
     }
 
     @PutMapping("/mudar-status-pedido")
-    public ResponseEntity<StandardResponse> mudarStatusPedido(@RequestBody RequestStatusPedidoDto request){
+    public ResponseEntity<?> mudarStatusPedido(@RequestBody RequestStatusPedidoDto request){
         LoggerUtils.logRequestStart(LOGGER, "mudarStatusPedido", null);
         long startTime = System.currentTimeMillis();
 
         service.mudarStatusPedido(request);
 
-        StandardResponse response = StandardResponse.builder()
-                .message("Pedido atualizado com sucesso!")
+        StandardResponseDTO response = StandardResponseDTO.builder()
+                .mensagem("Pedido atualizado com sucesso!")
                 .build();
 
         LoggerUtils.logElapsedTime(LOGGER, "mudarStatusPedido", startTime);

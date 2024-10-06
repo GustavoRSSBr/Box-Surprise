@@ -1,8 +1,8 @@
 package com.boxsurprise.controller;
 
-import com.boxsurprise.dtos.response.ProdutoResponseDto;
 import com.boxsurprise.dtos.request.RequestProdutoDto;
-import com.boxsurprise.dtos.response.StandardResponse;
+import com.boxsurprise.dtos.response.ProdutoResponseDto;
+import com.boxsurprise.dtos.response.StandardResponseDTO;
 import com.boxsurprise.usecase.ProdutoService;
 import com.boxsurprise.utils.LoggerUtils;
 import org.slf4j.Logger;
@@ -30,9 +30,9 @@ public class ProdutoController {
 
         service.salvarDadosProduto(request);
 
-        ResponseEntity<StandardResponse> response = ResponseEntity.ok(
-                StandardResponse.builder()
-                        .message("Produto cadastrado com sucesso!")
+        ResponseEntity<StandardResponseDTO> response = ResponseEntity.ok(
+                StandardResponseDTO.builder()
+                        .mensagem("Produto cadastrado com sucesso!")
                         .build()
         );
 
@@ -69,9 +69,10 @@ public class ProdutoController {
         long startTime = System.currentTimeMillis();
 
         service.alterarProdutoCadastrado(idProduto, request);
-        ResponseEntity<StandardResponse> response = ResponseEntity.ok(
-                StandardResponse.builder()
-                        .message("Produto alterado com sucesso!")
+
+        ResponseEntity<StandardResponseDTO> response = ResponseEntity.ok(
+                StandardResponseDTO.builder()
+                        .mensagem("Produto alterado com sucesso!")
                         .build()
         );
 

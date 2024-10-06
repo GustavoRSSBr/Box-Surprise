@@ -1,7 +1,7 @@
 package com.boxsurprise.dao;
 
-import com.boxsurprise.dtos.PedidoPessoaResponseDto;
-import com.boxsurprise.dtos.PessoaResponseDto;
+import com.boxsurprise.dtos.response.PedidoPessoaResponseDto;
+import com.boxsurprise.dtos.response.PessoaResponseDto;
 import com.boxsurprise.dtos.response.EnderecoResponseDto;
 import com.boxsurprise.model.Endereco;
 import com.boxsurprise.model.Usuario;

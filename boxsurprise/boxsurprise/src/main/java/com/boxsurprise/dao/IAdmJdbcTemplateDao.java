@@ -1,8 +1,8 @@
 package com.boxsurprise.dao;
 
-import com.boxsurprise.dtos.PedidoPessoaResponseDto;
-import com.boxsurprise.dtos.RequestStatusItemDto;
-import com.boxsurprise.dtos.RequestStatusPedidoDto;
+import com.boxsurprise.dtos.response.PedidoPessoaResponseDto;
+import com.boxsurprise.dtos.response.RequestStatusItemDto;
+import com.boxsurprise.dtos.response.RequestStatusPedidoDto;
 import com.boxsurprise.dtos.response.AnaliseResponseDto;
 
 import java.util.List;

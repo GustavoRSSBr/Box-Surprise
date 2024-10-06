@@ -1,4 +1,4 @@
-package com.boxsurprise.dtos;
+package com.boxsurprise.dtos.response;
 
 import com.boxsurprise.enuns.StatusPedidoItem;
 import lombok.Data;

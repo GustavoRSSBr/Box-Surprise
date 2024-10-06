@@ -1,9 +1,8 @@
 package com.boxsurprise.controller;
 
 
-import com.boxsurprise.dtos.response.PedidoResponseDto;
 import com.boxsurprise.dtos.request.RequestCompraItemDto;
-import com.boxsurprise.dtos.response.StandardResponse;
+import com.boxsurprise.dtos.response.PedidoResponseDto;
 import com.boxsurprise.dtos.response.StandardResponseDTO;
 import com.boxsurprise.usecase.CompraService;
 import com.boxsurprise.utils.LoggerUtils;
@@ -46,10 +45,10 @@ public class CompraController {
         long startTime = System.currentTimeMillis();
 
         PedidoResponseDto pedido = service.buscarPedido(idPedido);
-            ResponseEntity<StandardResponse> response = ResponseEntity.ok(
-                StandardResponse.builder()
-                        .message("Pedido encontrado!")
-                        .data(pedido)
+            ResponseEntity<StandardResponseDTO> response = ResponseEntity.ok(
+                StandardResponseDTO.builder()
+                        .mensagem("Pedido encontrado!")
+                        .dados(pedido)
                         .build()
             );
 
@@ -58,14 +57,14 @@ public class CompraController {
     }
 
     @PutMapping("/finalizar-compra")
-    public ResponseEntity<StandardResponse> finalizarCompra(@RequestParam Integer idPedido){
+    public ResponseEntity<?> finalizarCompra(@RequestParam Integer idPedido){
         LoggerUtils.logRequestStart(LOGGER, "finalizarCompra", idPedido);
         long startTime = System.currentTimeMillis();
 
         service.finalizarCompra(idPedido);
 
-        StandardResponse response = StandardResponse.builder()
-                .message("Compra finalizada com sucesso!")
+        StandardResponseDTO response = StandardResponseDTO.builder()
+                .mensagem("Compra finalizada com sucesso!")
                 .build();
 
         LoggerUtils.logElapsedTime(LOGGER, "buscarPedido", startTime);

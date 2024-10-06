@@ -1,7 +1,7 @@
 package com.boxsurprise.controller;
 
-import com.boxsurprise.dtos.PedidoPessoaResponseDto;
-import com.boxsurprise.dtos.PessoaResponseDto;
+import com.boxsurprise.dtos.response.PedidoPessoaResponseDto;
+import com.boxsurprise.dtos.response.PessoaResponseDto;
 import com.boxsurprise.dtos.request.LoginRequestDTO;
 import com.boxsurprise.dtos.request.RequestCadastroDto;
 import com.boxsurprise.dtos.request.RequestCadastroEnderecoDto;
@@ -32,9 +32,9 @@ public class ClienteController {
 
         service.salvarDadosCadastrais(request);
 
-        ResponseEntity<StandardResponse> response = ResponseEntity.ok(
-                StandardResponse.builder()
-                        .message("Cliente cadastrado com sucesso!")
+        ResponseEntity<StandardResponseDTO> response = ResponseEntity.ok(
+                StandardResponseDTO.builder()
+                        .mensagem("Cliente cadastrado com sucesso!")
                         .build()
         );
 
@@ -80,15 +80,15 @@ public class ClienteController {
     }
 
     @GetMapping("/listar-endereco-pessoa")
-    public ResponseEntity<StandardResponse> listarEnderecoPessoa(@RequestHeader(value = "Authorization") String token) {
+    public ResponseEntity<?> listarEnderecoPessoa(@RequestHeader(value = "Authorization") String token) {
         LoggerUtils.logRequestStart(LOGGER, "listarEnderecoPessoa", token);
         long startTime = System.currentTimeMillis();
 
         List<EnderecoResponseDto> enderecos = service.listarEnderecoPessoa(token);
 
-        StandardResponse response = StandardResponse.builder()
-                .message("Endereços encontrados com sucesso!")
-                .data(enderecos)
+        StandardResponseDTO response = StandardResponseDTO.builder()
+                .mensagem("Endereços encontrados com sucesso!")
+                .dados(enderecos)
                 .build();
 
         LoggerUtils.logElapsedTime(LOGGER, "listarEnderecoPessoa", startTime);
@@ -97,15 +97,15 @@ public class ClienteController {
     }
 
     @GetMapping("/listar-pedidos-por-pessoa")
-    public ResponseEntity<StandardResponse> listarPedidoPessoa(@RequestHeader(value = "Authorization") String token) {
+    public ResponseEntity<?> listarPedidoPessoa(@RequestHeader(value = "Authorization") String token) {
         LoggerUtils.logRequestStart(LOGGER, "listarPedidoPessoa", token);
         long startTime = System.currentTimeMillis();
 
         List<PedidoPessoaResponseDto> pedidos = service.listarPedidoPessoa(token);
 
-        StandardResponse response = StandardResponse.builder()
-                .message("Pedidos encontrados com sucesso!")
-                .data(pedidos)
+        StandardResponseDTO response = StandardResponseDTO.builder()
+                .mensagem("Pedidos encontrados com sucesso!")
+                .dados(pedidos)
                 .build();
 
         LoggerUtils.logElapsedTime(LOGGER, "listarPedidoPessoa", startTime);
@@ -114,7 +114,7 @@ public class ClienteController {
     }
 
     @GetMapping("/buscar-pessoa")
-    public ResponseEntity<StandardResponse> buscarPessoa(@RequestParam String email) {
+    public ResponseEntity<?> buscarPessoa(@RequestParam String email) {
         LoggerUtils.logRequestStart(LOGGER, "buscarPessoa", email);
         long startTime = System.currentTimeMillis();
 
@@ -122,9 +122,9 @@ public class ClienteController {
 
         PessoaResponseDto pessoa = service.buscarPessoa(email);
 
-        StandardResponse response = StandardResponse.builder()
-                .message("Pessoa encontrada com sucesso!")
-                .data(pessoa)
+        StandardResponseDTO response = StandardResponseDTO.builder()
+                .mensagem("Pessoa encontrada com sucesso!")
+                .dados(pessoa)
                 .build();
 
         LoggerUtils.logElapsedTime(LOGGER, "buscarPessoa", startTime);

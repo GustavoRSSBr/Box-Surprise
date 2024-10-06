@@ -1,4 +1,4 @@
-package com.boxsurprise.dtos;
+package com.boxsurprise.dtos.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

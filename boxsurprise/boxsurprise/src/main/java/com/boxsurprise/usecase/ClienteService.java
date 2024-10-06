@@ -3,8 +3,8 @@ package com.boxsurprise.usecase;
 
 import com.boxsurprise.config.SegurancaConfig;
 import com.boxsurprise.dao.IClienteJdbcTemplateDao;
-import com.boxsurprise.dtos.PedidoPessoaResponseDto;
-import com.boxsurprise.dtos.PessoaResponseDto;
+import com.boxsurprise.dtos.response.PedidoPessoaResponseDto;
+import com.boxsurprise.dtos.response.PessoaResponseDto;
 import com.boxsurprise.dtos.request.LoginRequestDTO;
 import com.boxsurprise.dtos.request.RequestCadastroDto;
 import com.boxsurprise.dtos.request.RequestCadastroEnderecoDto;

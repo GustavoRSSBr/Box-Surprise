@@ -2,13 +2,10 @@ package com.boxsurprise.usecase;
 
 import com.boxsurprise.dao.IAdmJdbcTemplateDao;
 import com.boxsurprise.dao.IProdutoJdbcTemplateDao;
-import com.boxsurprise.dao.impl.AdmJdbcTemplateImpl;
-import com.boxsurprise.dao.impl.ProdutoJdbcTemplateDaoImpl;
-import com.boxsurprise.dtos.PedidoPessoaResponseDto;
-import com.boxsurprise.dtos.RequestStatusItemDto;
-import com.boxsurprise.dtos.RequestStatusPedidoDto;
+import com.boxsurprise.dtos.response.PedidoPessoaResponseDto;
+import com.boxsurprise.dtos.response.RequestStatusItemDto;
+import com.boxsurprise.dtos.response.RequestStatusPedidoDto;
 import com.boxsurprise.dtos.response.AnaliseResponseDto;
-import com.boxsurprise.dtos.response.PedidoResponseDto;
 import com.boxsurprise.dtos.response.ProdutoResponseDto;
 import com.boxsurprise.enuns.ErrorCode;
 import com.boxsurprise.exceptions.NegocioException;
